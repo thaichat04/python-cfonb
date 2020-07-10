@@ -16,7 +16,7 @@ class StatementReader(object):
         # content
         result = {}
         for index, line in enumerate(file_lines):
-
+            #print(f"at line number {index+1}")
             if line[0:2] == '01':
                 row = Row(line)
                 
