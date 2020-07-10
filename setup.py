@@ -1,21 +1,21 @@
 from setuptools import setup, find_packages
-import sys, os
 
-version = '0.2.0'
+version = '1.0'
 
 long_description = open('README.rst').read()
 
 setup(
       name='python-cfonb',
       version=version,
-      description="Pure Python lib to read/write CFONB files.",
+      description="Pure Python lib to read/write CFONB files., forked from https://github.com/akretion/python-cfonb",
       long_description=long_description,
       classifiers=[],
-      keywords='cfonb bank statement parser',
-      author='Florent Pigout',
-      author_email='fpigout@anybox.fr',
-      url='',
-      license='MIT',
+      keywords=['cfonb', 'bank', 'statement', 'parser'],
+      author='Dhatim',
+      author_email='contact@dhatim.com',
+      url='https://github.com/dhatim/python-cfonb',
+      download_url = 'https://github.com/dhatim/python-cfonb/archive/1.0.tar.gz',
+      license='LGPL',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       include_package_data=True,
       zip_safe=False,
