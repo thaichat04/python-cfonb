@@ -97,8 +97,11 @@ class Parser(object):
         if len(line) > self.size and len(line.strip()) <= self.size:
             line = line[:self.size]
         if len(line) != self.size:
-            raise ParsingError("Invalid line: >%s<. the len should be %s"
-                               "instead of %s" % (line, self.size, len(line)))
+            if self._code == '05' and len(line) == 78:
+                line += ' ' * 42
+            else:
+                raise ParsingError("Invalid line: >%s<. the len should be %s"
+                                  "instead of %s" % (line, self.size, len(line)))
         match = self.re.match(line)
         # re check
         if match is None:
@@ -125,7 +128,7 @@ class ParserContent01(Parser):
     _regex = [
         ('record_code',     '(01)',  2),
         ('bank_code',       G_N,     5),
-        ('_1',              G__,     4),
+        ('_1',              G_AN_,   4),
         ('desk_code',       G_N,     5),
         ('currency_code',   G_A_,    3),
         ('nb_of_dec',       G_N_,    1),
@@ -133,7 +136,7 @@ class ParserContent01(Parser):
         ('account_nb',      G_AN,   11),
         ('_3',              G__,     2),
         ('prev_date',       G_N,     6),
-        ('_4',              G__,    50),
+        ('_4',              G_ALL,    50),
         ('prev_amount',     G_AMT,  14),
         ('_5',              G_ALL,  16),
      ]
@@ -194,7 +197,7 @@ class ParserContent05(Parser):
         ('account_nb',      G_AN,   11),
         ('operation_code',  G_AN,    2),
         ('operation_date',  G_N,     6),
-        ('_2',              G__,     5),
+        ('_2',              G_N_,     5),
         ('qualifier',       G_AN,    3),
         ('additional_info', G_ALL,  70),
         ('_3',              G__,     2),
@@ -212,7 +215,7 @@ class ParserContent07(Parser):
     _regex = [
         ('record_code',     '(07)',  2),
         ('bank_code',       G_N,     5),
-        ('_1',              G__,     4),
+        ('_1',              G_AN_,     4),
         ('desk_code',       G_N,     5),
         ('currency_code',   G_A_,    3),
         ('nb_of_dec',       G_N_,    1),
@@ -220,9 +223,9 @@ class ParserContent07(Parser):
         ('account_nb',      G_AN,   11),
         ('_3',              G__,     2),
         ('next_date',       G_N,     6),
-        ('_4',              G__,    50),
+        ('_4',              G_ALL,    50),
         ('next_amount',     G_AMT,  14),
-        ('_5',              G__,    16),
+        ('_5',              G_ALL,    16),
     ]
     
     def _post(self, res):
@@ -354,7 +357,7 @@ class ParserMMO(Parser):
         res = super(ParserMMO, self)._post(res)
         res['equivalent_amount'] = float(res['equivalent_amount'])\
                                         /float(res['nb_of_dec_amount'])
-        if res['exchange_rate']:
+        if res['exchange_rate'] and float(res['nb_of_dec_exchange_rate']) > 0:
             res['exchange_rate']=  float(res['exchange_rate'])\
                                         /float(res['nb_of_dec_exchange_rate'])
         return res
