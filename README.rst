@@ -17,6 +17,11 @@ or make transfer orders. The specifications of the format can be found on the `C
 
 The first two usecase are : read bank statements, and make transfer orders
 
+Installation
+----------------
+    >>> pip install python-cfonb
+
+
 Statement Parser
 ----------------
 

@@ -1,25 +1,25 @@
-# cfonb import
 from .common import Row, ParsingError
 
 
 class StatementReader(object):
-    """Statement file parser. Parse file object to corresponding
+    """
+    Statement file parser. Parse file object to corresponding
     row objects for further use. Offers useful method for reading, writing and
     comparing issues.
     """
 
     def parse(self, file_obj):
-        """ Parser a file object and return the list of bank statement
-        extracted from the file"""
+        """
+        Parser a file object and return the list of bank statement
+        extracted from the file
+        """
 
         file_lines  = file_obj.readlines()
         # content
         result = {}
         for index, line in enumerate(file_lines):
-            #print(f"at line number {index+1}")
             if line[0:2] == '01':
                 row = Row(line)
-                
                 #If a statement already exist for the same account
                 #we updated it else we create a new own
                 if result.get(row.account_nb):
@@ -53,12 +53,12 @@ class StatementReader(object):
 
         return [result[key] for key in result]
 
-class Statement(object):
 
+class Statement(object):
     def __init__(self):
         self.header = None
-        self.footer   = None
-        self.lines  = list()
+        self.footer = None
+        self.lines = list()
         self.account_nb = None
 
 
