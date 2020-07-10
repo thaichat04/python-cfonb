@@ -1,8 +1,7 @@
-# python import
-from datetime import datetime
 import decimal
 import math
 import re
+from datetime import datetime
 
 # blank only rule
 G__ = r'( {%d})'
