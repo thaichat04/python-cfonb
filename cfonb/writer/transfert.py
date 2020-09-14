@@ -16,6 +16,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with CFONB.  If not, see <http://www.gnu.org/licenses/>.
 """
+from cfonb.writer.common import write, save
+
 """
  Coryright 2011, Stéphane Planquart <stephane@planquart.com>
 
@@ -59,32 +61,18 @@ class Transfert:
         self._datevir                   = datevir.strftime(format='%d%m') + datevir.strftime(format='%y')[1:]
         return self
 
-    def add(self,reference, raisonsocial,domiciliation,
+    def add(self, reference, raisonsocial, domiciliation,
             guichet, compte, montant, libelle,
             etablissement, balance=''):
         montant        *= 100       #passe le montant en centime d'euros
         self.total     += montant   #ajout le momtant au total des virements
-        self._content   = self._add(reference, raisonsocial,domiciliation,
+        self._content   = self._add(reference, raisonsocial, domiciliation,
                                     guichet, compte, montant, libelle,
                                     etablissement, balance)
         return self
 
-    def render(self,filename=None):
-        content  = self._header()
-        content += self._content
-        content += self._footer()
-        if (filename!=None):
-            f = open(filename,'w')
-            f.write(content)
-            f.close()
-        return content
-
-    def _space(self,chaine,length,rpad=False,caract=' '):
-        chaine = str(chaine)
-        if(rpad):
-            return chaine.rjust(length,caract)[:length]
-        else:
-            return chaine.ljust(length,caract)[:length]
+    def render(self, filename=None):
+        return save(self._header(), self._content, self._footer(), filename)
 
     def _header(self):
         #[zone A]
@@ -92,40 +80,40 @@ class Transfert:
         #[zone B1]
         content += "02"
         #[zone B2] Espace reserve 8 caracteres
-        content += self._space('',8)
+        content += write('', 8)
         #[zone B3] numero emetteur (attribue par chaque etablisement 6 caracteres)
-        content += self._space(self._emeteur['num_emetteur'], 6)
+        content += write(self._emeteur['num_emetteur'], 6)
         #[zone C1-1] code CCD (virement à échéance "E-3")
-        content += self._space('',1)
+        content += write('', 1)
         #[zone C1-2] Espace reserve 6 caracteres
-        content += self._space('',6)
+        content += write('', 6)
         #[zone C1-3] date JJMMA
         content += self._datevir;
         #[zone C2] Raison sociale du donneur d'ordre (24 caracteres max)
-        content += self._space(self._emeteur['raisonsocial'], 24)
+        content += write(self._emeteur['raisonsocial'], 24)
         #[zone D1-1] Reference virement sur 7 caracteres
-        content += self._space(self._emeteur['reference'],7)
+        content += write(self._emeteur['reference'], 7)
         #[zone D1-2] Espace reserve 17 caracteres
-        content += self._space('',17)
+        content += write('', 17)
         #[zone D2-1] Espace reserve 2 caracteres
-        content += self._space('',2)
+        content += write('', 2)
         #[zone D2-2] Virement effectue en euro sur 1 caractere
         content += "E";
         #[zone D2-3] Espace reserve 5 caracteres
-        content += self._space('',5)
+        content += write('', 5)
         #[zone D3] Code Guichet Emetteur 5 caracteres
-        content += self._space(self._emeteur['guichet'], 5)
+        content += write(self._emeteur['guichet'], 5)
         #[zone D4] Numero de compte Emetteur 11 caracteres
-        content += self._space(self._emeteur['num_compte'], 11)
+        content += write(self._emeteur['num_compte'], 11)
         #[zone E] Espace reserve 16 caracteres
-        content += self._space('',16)
+        content += write('', 16)
         #[zone F] Espace reserve 31 caracteres
-        content += self._space('',31)
+        content += write('', 31)
         #[zone G1] code etablissement de la banque du donneur d'ordre
         #          5 caracteres
-        content += self._space(self._emeteur['banque'], 5)
+        content += write(self._emeteur['banque'], 5)
         #[zone G2] Espace reserve 6 caracteres
-        content += self._space('',6)
+        content += write('', 6)
         content += "\r\n";
         return content
 
@@ -135,30 +123,30 @@ class Transfert:
         #[zone B1]02 -> Nature de l'enregistrement (virement à vue )
         content += "02"
         #[zone B2]8 espaces
-        content += self._space("",8)
+        content += write("", 8)
         #[zone B3] numéro émetteur (numéro attribué par chaque établissement à son client émetteur)
-        content += self._space(self._emeteur['num_emetteur'],6)
+        content += write(self._emeteur['num_emetteur'], 6)
         #[zone C1]Réservée 12 caractères
-        content += self._space("",12)
+        content += write("", 12)
         #[zone C2]Réservée 24 caractères
-        content += self._space("",24)
+        content += write("", 24)
         #[zone D1]Réservée 24 caractères
-        content += self._space("",24)
+        content += write("", 24)
         #[zone D2]Réservée 8 caractères
-        content += self._space("",8)
+        content += write("", 8)
         #[zone D3]Réservée 5 caractères
-        content += self._space("",5)
+        content += write("", 5)
         #[zone D4]Réservée 11 caractères
-        content += self._space("",11)
+        content += write("", 11)
         #[zone E]Montant : les 16 positions contiennent le montant centimes
         #                  compris (00 s'il y a lieu) cadré à droite , non signé, complété à gauche par des zéros
-        content += self._space(self.total,16,rpad=True,caract='0')
+        content += write(self.total, 16, rpad=True, caract='0')
         #[zone F]Réservée 31 caractères
-        content += self._space("",31)
+        content += write("", 31)
         #[zone G1]Réservée 5 caractères
-        content += self._space("",5)
+        content += write("", 5)
         #[zone G2]Réservée 6 caractères
-        content += self._space("",6)
+        content += write("", 6)
         content += "\r\n";
         return content
 
@@ -170,34 +158,34 @@ class Transfert:
         #[zone B1]02 -> Nature de l'enregistrement (virement à vue )
         content += "02"
         #[zone B2]Espace réservé 8 caractères
-        content += self._space("",8)
+        content += write("", 8)
         #[zone B3] numéro émetteur (numéro attribué par chaque établissement à
         #          son client émetteur)
-        content += self._space(self._emeteur['num_emetteur'],6)
+        content += write(self._emeteur['num_emetteur'], 6)
         #[zone C1] référence (numéro facture par exemple) 12car
-        content += self._space(reference,12)
+        content += write(reference, 12)
         #[zone C2] raison social du destinataure (24 caractères max)
-        content += self._space(raisonsocial,24)
+        content += write(raisonsocial, 24)
         #[zone D1] domiciliation : désignation en clair du guichet et de la
         #         banque de domiciliataire (facultatif) sur 24  caractères maxi
-        content += self._space(domiciliation,24)
+        content += write(domiciliation, 24)
         #[zone D2] balance des paiements sur 8 caractères
         #         (réservé pour les salaires et pension)
-        content += self._space("",8)
+        content += write("", 8)
         #[zone D3] Code Guichet 5 caractères
-        content += self._space(guichet,5)
+        content += write(guichet, 5)
         #[zone D4] Numéro de compte sur 11 caractères
-        content += self._space(compte,5)
+        content += write(compte, 5)
         #[zone E]Montant : les 16 positions contiennent le montant centimes
         #        compris (00 s'il y a lieu) cadré à droite , non signé, complété à
         #        gauche par des zéros
-        content += self._space(montant,16,rpad=True,caract='0')
+        content += write(montant, 16, rpad=True, caract='0')
         #[zone F]Libellé : 31 caractères à la disposition du client émetteur
         #        pour indication du motif et des références de l'opération
-        content += self._space(libelle,31)
+        content += write(libelle, 31)
         #[zone G1]Code établissement destinataire 5 chiffres
-        content += self._space(etablissement,5)
+        content += write(etablissement, 5)
         #[zone G2]Zone réservée de 6 caractères
-        content += self._space("",6)
+        content += write("", 6)
         content += "\r\n";
         return content
