@@ -16,3 +16,7 @@ def save(header, body, footer, filename=None):
         f.write(content)
         f.close()
     return content
+
+
+def date_format(date):
+    return date.strftime(format='%d%m') + date.strftime(format='%y')[1:]

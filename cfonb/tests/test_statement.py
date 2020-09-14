@@ -1,10 +1,9 @@
 # python import - http://docs.python.org/library/unittest.html
 import unittest
-from StringIO import StringIO
+from io import StringIO
 
 # import cfonb module
-from cfonb.parser import Row, ParsingError, statement as p
-
+from cfonb.parser import Row, statement as p
 
 HEAD_LINE = '0130002    00447     0000888899H  160811                                                  0000000132303H                '
 

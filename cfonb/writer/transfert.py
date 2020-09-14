@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with CFONB.  If not, see <http://www.gnu.org/licenses/>.
 """
-from cfonb.writer.common import write, save
+from cfonb.writer.common import write, save, date_format
 
 """
  Coryright 2011, Stéphane Planquart <stephane@planquart.com>
@@ -50,15 +50,15 @@ class Transfert:
         self.total = 0
         pass
 
-    def setEmeteurInfos(self,num_emeteur,raisonsocial,reference,
-                             guichet,num_compte,banque,datevir):
+    def setEmeteurInfos(self,num_emeteur, raisonsocial, reference,
+                             guichet, num_compte, banque, datevir):
         self._emeteur['num_emetteur']   = str(num_emeteur)
         self._emeteur['raisonsocial']   = raisonsocial
         self._emeteur['reference']      = reference
         self._emeteur['guichet']        = guichet
         self._emeteur['num_compte']     = num_compte
         self._emeteur['banque']         = banque
-        self._datevir                   = datevir.strftime(format='%d%m') + datevir.strftime(format='%y')[1:]
+        self._datevir                   = date_format(datevir)
         return self
 
     def add(self, reference, raisonsocial, domiciliation,
@@ -140,7 +140,7 @@ class Transfert:
         content += write("", 11)
         #[zone E]Montant : les 16 positions contiennent le montant centimes
         #                  compris (00 s'il y a lieu) cadré à droite , non signé, complété à gauche par des zéros
-        content += write(self.total, 16, rpad=True, caract='0')
+        content += write(self.total, 16, rpad=True, fill_char='0')
         #[zone F]Réservée 31 caractères
         content += write("", 31)
         #[zone G1]Réservée 5 caractères
@@ -179,7 +179,7 @@ class Transfert:
         #[zone E]Montant : les 16 positions contiennent le montant centimes
         #        compris (00 s'il y a lieu) cadré à droite , non signé, complété à
         #        gauche par des zéros
-        content += write(montant, 16, rpad=True, caract='0')
+        content += write(montant, 16, rpad=True, fill_char='0')
         #[zone F]Libellé : 31 caractères à la disposition du client émetteur
         #        pour indication du motif et des références de l'opération
         content += write(libelle, 31)
@@ -187,5 +187,5 @@ class Transfert:
         content += write(etablissement, 5)
         #[zone G2]Zone réservée de 6 caractères
         content += write("", 6)
-        content += "\r\n";
+        content += "\r\n"
         return content
