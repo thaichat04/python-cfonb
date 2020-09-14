@@ -25,6 +25,10 @@ along with CFONB.  If not, see <http://www.gnu.org/licenses/>.
 """
 from cfonb.writer.common import write, date_format, save, BR_LINE
 
+LAST_LETTER_NUMBER = {'1': 'A', '2': 'B', '3': 'C', '4': 'D', '5': 'E', '6': 'F', '7': 'G', '8': 'H', '9': 'I',
+                 '-1': 'J', '-2': 'K', '-3': 'L', '-4': 'M', '-5': 'N', '-6': 'O', '-7': 'P', '-8': 'Q', '-9': 'R',
+                 '0': '{', '-0': '}'}
+
 
 class Statement(object):
     def __init__(self):
@@ -69,7 +73,7 @@ class Statement(object):
         line += write('       ', 7) # entry writing code
         line += write(' ', 1) # exoneration code
         line += write(' ', 1)  # reserve zone
-        line += write(str(amount).replace('.', '') + 'A', 14, rpad=True, fill_char='0')
+        line += write(number_format(amount), 14, rpad=True, fill_char='0')
         line += write(reference, 16)
         self._content.append(line)
         return self
@@ -90,7 +94,7 @@ class Statement(object):
             line += write('  ', 2)  # reserved zone
             line += write(date_format(self._header['date']), 6)
             line += write(' ', 50)  # reserved zone
-            line += write(str(self._header['amount']).replace('.', '') + 'A', 14, rpad=True, fill_char='0')
+            line += write(number_format(self._header['amount']), 14, rpad=True, fill_char='0')
             line += write(' ', 16)  # reserved zone
             return line + BR_LINE
         return ''
@@ -108,7 +112,19 @@ class Statement(object):
             line += write('  ', 2)  # reserved zone
             line += write(date_format(self._footer['date']), 6)
             line += write(' ', 50)  # reserved zone
-            line += write(str(self._footer['amount']).replace('.', '') + 'A', 14, rpad=True, fill_char='0')
+            line += write(number_format(self._footer['amount']), 14, rpad=True, fill_char='0')
             line += write(' ', 16)  # reserved zone
             return line + BR_LINE
         return ''
+
+
+def number_format(number):
+    if not number:
+        return ''
+
+    _number = str(number).replace('.', '')
+    _number = _number.replace('-', '')
+    last_number = _number[-1]
+    if number < 0:
+        last_number = '-' + last_number
+    return _number[0:len(_number) - 1] + LAST_LETTER_NUMBER.get(last_number)
