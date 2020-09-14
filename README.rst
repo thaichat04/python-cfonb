@@ -55,24 +55,41 @@ Or as an object::
 
     >>> header = statement.header.as_obj()
     >>> header.bank_code
-    '30002'
+    >>> '30002'
 
 The statement lines between the header and the footer can be iterated::
 
     >>> # TODO: use an interator, and hide the parse_amount in the object
     >>> from cfonb.parser.common import parse_amount
     >>> for line in statement.lines:
-    ...     l = line.as_obj()
-    ...     print parse_amount(l.amount, l.nb_of_dec)
-    -2000.0
-    -1000.0
-    4000.0
-    -3000.0
+    >>> ...     l = line.as_obj()
+    >>> ...     print parse_amount(l.amount, l.nb_of_dec)
+    >>> -2000.0
+    >>> -1000.0
+    >>> 4000.0
+    >>> -3000.0
+
+
+Statement Writer
+----------------
+Generate the content of statements::
+
+    >>> from datetime import datetime
+    >>> from cfonb.writer.statement import Statement
+    >>> content = Statement().header('20002', '90005', 'EUR', '01711467640', date(2011, 10, 14), 12345.67)\
+    >>>                         .add('20002', '1234567', '90005', 'EUR', '01711467640', date(2011, 10, 14), 'label 1', 1234.56, 'reference1')
+    >>>                         .add('20002', '1234567', '90005', 'EUR', '01711467640', date(2011, 10, 13), 'label 2', 123.45, 'reference2')
+    >>>                         .render()
+
+You can use a filename with render method::
+
+    >>> Statement().header().add().footer().render(filename='./virement.cfonb')
+    "0120002    90005EUR2 01711467640  141011 ..."
+
 
 
 Transfer Writer
 ---------------
-
 Prepare the contents::
 
     >>> from datetime import datetime
