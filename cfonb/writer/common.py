@@ -1,3 +1,5 @@
+BR_LINE = '\r\n'
+
 
 def write(input_, length, rpad=False, fill_char=' '):
     input_ = str(input_)
@@ -19,4 +21,4 @@ def save(header, body, footer, filename=None):
 
 
 def date_format(date):
-    return date.strftime(format='%d%m') + date.strftime(format='%y')[1:]
+    return date.strftime(format='%d%m') + date.strftime(format='%y')

@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with CFONB.  If not, see <http://www.gnu.org/licenses/>.
 """
-from cfonb.writer.common import write, save, date_format
+from cfonb.writer.common import write, save, date_format, BR_LINE
 
 """
  Coryright 2011, Stéphane Planquart <stephane@planquart.com>
@@ -114,7 +114,7 @@ class Transfert:
         content += write(self._emeteur['banque'], 5)
         #[zone G2] Espace reserve 6 caracteres
         content += write('', 6)
-        content += "\r\n";
+        content += BR_LINE
         return content
 
     def _footer(self):
@@ -147,7 +147,7 @@ class Transfert:
         content += write("", 5)
         #[zone G2]Réservée 6 caractères
         content += write("", 6)
-        content += "\r\n";
+        content += BR_LINE
         return content
 
     def _add(self,reference, raisonsocial,domiciliation,
@@ -187,5 +187,5 @@ class Transfert:
         content += write(etablissement, 5)
         #[zone G2]Zone réservée de 6 caractères
         content += write("", 6)
-        content += "\r\n"
+        content += BR_LINE
         return content

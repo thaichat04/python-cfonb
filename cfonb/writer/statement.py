@@ -23,13 +23,14 @@ along with CFONB.  If not, see <http://www.gnu.org/licenses/>.
   - ligne total (facultative)
 
 """
-from cfonb.writer.common import write, date_format, save
+from cfonb.writer.common import write, date_format, save, BR_LINE
 
 
 class Statement(object):
-    _header = {}
-    _content = []
-    _footer = {}
+    def __init__(self):
+        self._header = {}
+        self._content = []
+        self._footer = {}
 
     def header(self, bank_code, agency_code, currency, account_number, date, amount):
         self._header['bank_code'] = bank_code
@@ -59,7 +60,7 @@ class Statement(object):
         line += write('2', 1) # number of decimal
         line += write(' ', 1) # SIT code
         line += write(account_number, 11)
-        line += write('  ', 2) # interbank code
+        line += write('08', 2) # interbank code
         line += write(date_format(date), 6)
         line += write('  ', 2) # rejected code
         line += write(date_format(date), 6)
@@ -68,45 +69,46 @@ class Statement(object):
         line += write('       ', 7) # entry writing code
         line += write(' ', 1) # exoneration code
         line += write(' ', 1)  # reserve zone
-        line += write(amount, 14)
+        line += write(str(amount).replace('.', '') + 'A', 14, rpad=True, fill_char='0')
         line += write(reference, 16)
         self._content.append(line)
         return self
 
     def render(self, filename=None):
-        return save(self._header(), '\r\n'.join(self._content), self._footer(), filename)
+        return save(self._render_header(), BR_LINE.join(self._content) + BR_LINE, self._render_footer(), filename)
 
-    def _header(self):
+    def _render_header(self):
         if self._header:
             line = write('01', 2)
             line += write(self._header['bank_code'], 5)
             line += write('    ', 4) # reserved zone
-            line += write(self._header['agency_code', 5])
-            line += write(self._header['currency', 3])
+            line += write(self._header['agency_code'], 5)
+            line += write(self._header['currency'], 3)
             line += write('2', 1) # number of decimal
             line += write(' ', 1)  # reserved zone
             line += write(self._header['account_number'], 11)
             line += write('  ', 2)  # reserved zone
             line += write(date_format(self._header['date']), 6)
             line += write(' ', 50)  # reserved zone
-            line += write(self._header['amount'], 14)
+            line += write(str(self._header['amount']).replace('.', '') + 'A', 14, rpad=True, fill_char='0')
             line += write(' ', 16)  # reserved zone
-            return line
+            return line + BR_LINE
         return ''
 
-    def _footer(self):
+    def _render_footer(self):
         if self._footer:
             line = write('07', 2)
             line += write(self._footer['bank_code'], 5)
             line += write('    ', 4) # reserved zone
-            line += write(self._footer['agency_code', 5])
-            line += write(self._footer['currency', 3])
+            line += write(self._footer['agency_code'], 5)
+            line += write(self._footer['currency'], 3)
             line += write('2', 1) # number of decimal
             line += write(' ', 1)  # reserved zone
             line += write(self._footer['account_number'], 11)
             line += write('  ', 2)  # reserved zone
             line += write(date_format(self._footer['date']), 6)
             line += write(' ', 50)  # reserved zone
-            line += write(self._footer['amount'], 14)
+            line += write(str(self._footer['amount']).replace('.', '') + 'A', 14, rpad=True, fill_char='0')
             line += write(' ', 16)  # reserved zone
-            return line
+            return line + BR_LINE
+        return ''
