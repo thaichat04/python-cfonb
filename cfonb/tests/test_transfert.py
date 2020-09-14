@@ -7,7 +7,7 @@ from cfonb.writer import transfert as w
 
 
 def _print(res):
-    print res.replace('\r\n','\\r\\n').replace(' ','.')
+    print(res.replace('\r\n','\\r\\n').replace(' ','.'))
 
 
 class TestTransfert(unittest.TestCase):
