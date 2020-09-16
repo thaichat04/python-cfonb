@@ -50,6 +50,7 @@ class Row(dict):
         # do re match
         parser = Parser.get_parser(line[0:2])
         self.update(parser.parse(line))
+        self.origin = [line]
         
     def __getattr__(self, attr):
         return self[attr]

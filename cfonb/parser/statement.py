@@ -35,6 +35,7 @@ class StatementReader(object):
                 statement.lines.append(row)
             
             elif line[0:2] == '05':
+                row.origin.append(line)
                 new_row = Row(line)
                 if new_row.get('label') and row.get('label'):
                     index = 0
