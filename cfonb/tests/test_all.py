@@ -1,13 +1,14 @@
-import unittest
 import doctest
+import unittest
 from os.path import join, pardir
-# cfonb import
-from cfonb.writer import transfert
-from cfonb.parser import common
 
+from cfonb.parser import common
 # cfonb tests import
 from cfonb.tests import test_statement
 from cfonb.tests import test_transfert
+# cfonb import
+from cfonb.writer import transfert
+
 
 def suite():
     suite = unittest.TestSuite()

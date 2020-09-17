@@ -1,3 +1,5 @@
+from cfonb.writer.common import BR_LINE
+
 from .common import Row, ParsingError
 
 
@@ -32,9 +34,11 @@ class StatementReader(object):
 
             elif line[0:2] == '04':
                 row = Row(line)
+                row['origin'] = line.replace('\n', '').replace('\r', '')
                 statement.lines.append(row)
             
             elif line[0:2] == '05':
+                row['origin'] = row.get('origin', '') + BR_LINE + line.replace('\n', '').replace('\r', '')
                 new_row = Row(line)
                 if new_row.get('label') and row.get('label'):
                     index = 0
@@ -45,7 +49,6 @@ class StatementReader(object):
                             break
                 else:
                     row.update(new_row)
-
             elif line[0:2] == '07':
                 statement.footer = Row(line)
             else:

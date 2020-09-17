@@ -3,10 +3,10 @@ import unittest
 from datetime import date
 from io import StringIO
 
-from nose.tools import assert_is_not_none, assert_equal
+from nose.tools import assert_is_not_none, assert_equal, assert_true
 
-from cfonb import StatementReader
-from cfonb.writer.statement import Statement, number_format
+from parser.statement import StatementReader
+from writer.statement import number_format, Statement
 
 
 class TestStatement(unittest.TestCase):
@@ -35,11 +35,26 @@ class TestStatement(unittest.TestCase):
         assert_equal(number_format(None), '')
         assert_equal(number_format(''), '')
 
+    def test_parse_with_original_content(self):
+        content = '''0115589    29701EUR2 01711467640  220620GAEC DE STANG KERBAIL                             0000000352431O0000            
+0415589    29701EUR2E01711467640B1230620  220620PRLV ORANGE                             0 0000000000315}VOTRE ABONNEMENT
+0515589    29701EUR2E01711467640B1230620     NBEORANGE                                                                  
+0515589    29701EUR2E01711467640B1230620     LCCVOTRE ABONNEMENT FIXE  02XXXXX896 (FACTURE: XXXXX8960E2) - P            
+0515589    29701EUR2E01711467640B1230620     RCN298576896 985768960E235E                                                
+0515589    29701EUR2E01711467640B1230620     LIBPRELEVEMENTS SEPA DOMICILIES  
+0715589    29701EUR2 01711467640  230620                                                  0000000352746O                '''
+        reader = StatementReader()
+        result = reader.parse(StringIO(content))
+        assert_equal(len(result[0].lines), 1)
+        assert_true(result[0].lines[0].get('origin').startswith('0415589    29701EUR2E01711467640B1230620  220620PRLV ORANGE                             0 0000000000315}VOTRE ABONNEMENT'))
+        assert_true(result[0].lines[0].get('origin').endswith('0515589    29701EUR2E01711467640B1230620     LIBPRELEVEMENTS SEPA DOMICILIES  '))
+
 
 def suite():
     suite = unittest.TestSuite()
-    suite.addTest(TestStatement('test_parse_cfonb'))
+    suite.addTest(TestStatement('test_render_parse_cfonb'))
     suite.addTest(TestStatement('test_number_format'))
+    suite.addTest(TestStatement('test_parse_with_original_content'))
     return suite
 
 
