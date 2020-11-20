@@ -48,6 +48,7 @@ class TestStatement(unittest.TestCase):
         assert_equal(len(result[0].lines), 1)
         assert_true(result[0].lines[0].get('origin').startswith('0415589    29701EUR2E01711467640B1230620  220620PRLV ORANGE                             0 0000000000315}VOTRE ABONNEMENT'))
         assert_true(result[0].lines[0].get('origin').endswith('0515589    29701EUR2E01711467640B1230620     LIBPRELEVEMENTS SEPA DOMICILIES  '))
+        assert_true(len(result[0].lines[0].get('origin').splitlines()) == 5)
 
 
 def suite():

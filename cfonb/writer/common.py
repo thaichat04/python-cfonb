@@ -1,4 +1,4 @@
-BR_LINE = '\r\n'
+BR_LINE = '\n'
 
 
 def write(input_, length, rpad=False, fill_char=' '):
