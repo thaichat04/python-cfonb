@@ -50,6 +50,23 @@ class TestStatement(unittest.TestCase):
         assert_true(result[0].lines[0].get('origin').endswith('0515589    29701EUR2E01711467640B1230620     LIBPRELEVEMENTS SEPA DOMICILIES  '))
         assert_true(len(result[0].lines[0].get('origin').splitlines()) == 5)
 
+    def test_parse_with_comment_content(self):
+        content = '''0115589    29701EUR2 01711467640  220620GAEC DE STANG KERBAIL                             0000000352431O0000            
+0415589    29701EUR2E01711467640B1230620  220620PRLV ORANGE                             0 0000000000315}VOTRE ABONNEMENT
+0515589    29701EUR2E01711467640B1230620     NBEORANGE                                                                  
+0515589    29701EUR2E01711467640B1230620     LCCVOTRE ABONNEMENT FIXE  02XXXXX896 (FACTURE: XXXXX8960E2) - P            
+0515589    29701EUR2E01711467640B1230620     RCN298576896 985768960E235E                                                
+0515589    29701EUR2E01711467640B1230620     LIBPRELEVEMENTS SEPA DOMICILIES  
+0715589    29701EUR2 01711467640  230620                                                  0000000352746O                '''
+        reader = StatementReader()
+        result = reader.parse(StringIO(content))
+        assert_equal(len(result[0].lines), 1)
+        assert_true(result[0].lines[0].get('comment').startswith(
+            'NBEORANGE'))
+        assert_true(result[0].lines[0].get('comment').endswith(
+            'LIBPRELEVEMENTS SEPA DOMICILIES'))
+        assert_true(len(result[0].lines[0].get('comment').splitlines()) == 4)
+
 
 def suite():
     suite = unittest.TestSuite()

@@ -45,10 +45,13 @@ class StatementReader(object):
                     while True:
                         index += 1
                         if not row.get('label_%s'%index):
-                            row['label_%s'%index] = new_row.label
+                            row['label_%s'%index] = new_row.get('label')
                             break
                 else:
                     row.update(new_row)
+                comment = line.split('   ')[2].strip()
+                if comment:
+                    row['comment'] = row.get('comment', '') + (BR_LINE if row.get('comment', '') else '') + comment
             elif line[0:2] == '07':
                 statement.footer = Row(line)
             else:
