@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '2.6'
+version = '2.7'
 
 long_description = open('README.rst').read()
 
@@ -14,7 +14,7 @@ setup(
       author='Dhatim',
       author_email='contact@dhatim.com',
       url='https://github.com/dhatim/python-cfonb',
-      download_url = 'https://github.com/dhatim/python-cfonb/archive/2.6.tar.gz',
+      download_url = 'https://github.com/dhatim/python-cfonb/archive/2.7.tar.gz',
       license='LGPL',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       include_package_data=True,
