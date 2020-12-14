@@ -49,7 +49,10 @@ class TestStatement(unittest.TestCase):
         assert_true(result[0].lines[0].get('origin').startswith('0415589    29701EUR2E01717651230B1230620  220620PRLV AAAAAA                             0 0000000000315}VOTRE ABONNEMENT'))
         assert_true(result[0].lines[0].get('origin').endswith('0515589    29701EUR2E01717651230B1230620     LIBPRELEVEMENTS SEPA DOMICILIES  '))
         assert_true(len(result[0].lines[0].get('origin').splitlines()) == 5)
-        assert_true(len(result[0].lines[0].get('comment').splitlines()) == 4)
+        comments = result[0].lines[0].get('comment').splitlines()
+        assert_true(len(comments) == 4)
+        assert_equal(comments[0], 'XXXXXX')
+        assert_equal(comments[1], 'VOTRE ABONNEMENT FIXE  02XXXXX896 (FACTURE: XXXXX8960E2) - P')
 
 
 def suite():
