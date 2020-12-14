@@ -49,7 +49,7 @@ class StatementReader(object):
                             break
                 else:
                     row.update(new_row)
-                comment = line[46:].strip()
+                comment = line[46+2:].strip()
                 if comment:
                     row['comment'] = row.get('comment', '') + (BR_LINE if row.get('comment', '') else '') + comment
             elif line[0:2] == '07':
