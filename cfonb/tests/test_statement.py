@@ -34,6 +34,8 @@ class TestStatement(unittest.TestCase):
         assert_equal(number_format(12340), '1234{')
         assert_equal(number_format(None), '')
         assert_equal(number_format(''), '')
+        assert_equal(number_format(0), '0{')
+        assert_equal(number_format(00), '0{')
 
     def test_parse_with_original_content(self):
         content = '''0115589    29701EUR2 01717651230  220620AAAA BB CCCCC KERHHHH                             0000000352431O0000            

@@ -119,12 +119,15 @@ class Statement(object):
 
 
 def number_format(number):
-    if not number:
+    if number is None or not str(number):
         return ''
+    elif number == 0:
+        return '0{'
 
     _number = str(number).replace('.', '')
     _number = _number.replace('-', '')
     last_number = _number[-1]
     if number < 0:
         last_number = '-' + last_number
+
     return _number[0:len(_number) - 1] + LAST_LETTER_NUMBER.get(last_number)
